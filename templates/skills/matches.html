@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="fw-light mb-4">Potential Teachers</h2>
+
+<div class="row">
+  {% for profile in matches %}
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card shadow-sm border-0 rounded-3 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <img src="{{ profile.user.profile.image.url }}" class="rounded-circle me-3"
+            style="width: 60px; height: 60px; object-fit: cover;">
+          <div>
+            <h5 class="card-title mb-0">
+              <a href="{% url 'public_profile' user_id=profile.user.id %}" ...>{{ profile.user.username }}</a>
+            </h5>
+            <p class="card-text text-muted">{{ profile.bio|truncatewords:10 }}</p>
+          </div>
+        </div>
+
+        <h6 class="fw-light text-muted">Can Teach Skills You Want:</h6>
+        {% for skill in profile.skills_to_teach.all %}
+        {% if skill in user.profile.skills_to_learn.all %}
+        <a href="{% url 'request_session' teacher_id=profile.user.id skill_id=skill.id %}"
+          class="btn btn-primary btn-sm mb-1">
+          <i data-feather="calendar-plus" class="feather"></i> Request "{{ skill.name }}"
+        </a>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col">
+    <div class="card shadow-sm border-0 rounded-3">
+      <div class="card-body p-4 text-center">
+        <h4 class="fw-light">No matches found right now.</h4>
+        <p class="text-muted">Try adding more skills you want to learn to your profile!</p>
+        <a href="{% url 'profile' %}" class="btn btn-primary">Edit Profile</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4 p-sm-5 text-center">
+                <h2 class="fw-light">You have been logged out.</h2>
+                <p class="text-muted">Thank you for using SkillSwap!</p>
+                <a href="{% url 'login' %}" class="btn btn-primary mt-3">Log In Again</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

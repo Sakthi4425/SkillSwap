@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4 p-sm-5">
+                <h2 class="text-center fw-light mb-4">Edit {{ user.username }}'s Profile</h2>
+                
+                <div class="text-center mb-4">
+                    <img src="{{ user.profile.image.url }}" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ p_form.image.id_for_label }}" class="form-label">Update Profile Picture</label>
+                        {% render_field p_form.image class="form-control" %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ p_form.bio.id_for_label }}" class="form-label">Your Bio</label>
+                        {% render_field p_form.bio class="form-control" rows="4" placeholder="Tell us a little about yourself..." %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Skills You Can Teach</label>
+                            <div class="p-3 border rounded" style="height: 200px; overflow-y: auto;">
+                                {% for checkbox in p_form.skills_to_teach %}
+                                <div class="form-check">
+                                    
+                                    {{ checkbox.tag }} 
+
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Skills You Want to Learn</label>
+                            <div class="p-3 border rounded" style="height: 200px; overflow-y: auto;">
+                                {% for checkbox in p_form.skills_to_learn %}
+                                <div class="form-check">
+
+                                    {{ checkbox.tag }} 
+
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid mt-3">
+                        <button class="btn btn-primary btn-lg" type="submit">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

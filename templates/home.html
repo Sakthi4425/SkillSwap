@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center">
+        
+        <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
+            <img src="{{ MEDIA_URL }}logo.png" alt="SkillSwap Logo" class="img-fluid mb-4" style="max-height: 150px;">
+            <h1 class="display-4 fw-bold text-dark">SkillSwap</h1>
+            <p class="fs-4 fw-light text-muted mb-4">The peer-to-peer platform where everyone is both a student and a teacher.</p>
+            <p class="lead mb-4">Share what you know. Learn what you don't.</p>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-lg px-4 me-md-2">
+                    <i data-feather="user-plus" class="feather me-2"></i> Get Started
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-4">
+                    <i data-feather="log-in" class="feather me-2"></i> Log In
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <img src="{{ MEDIA_URL }}home_hero.png" class="img-fluid rounded-3 shadow-lg" alt="Man smiling and waving, wearing a SkillSwap hoodie">
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body text-center p-4">
+                    <img src="{{ profile_user.profile.image.url }}" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                    <h2 class="card-title mb-0">{{ profile_user.username }}</h2>
+                    <hr>
+                    <h5 class="fw-light text-muted">Bio</h5>
+                    <p class="card-text">{{ profile_user.profile.bio|default:"No bio provided." }}</p>
+
+                    <h5 class="fw-light text-muted mt-4">Skills to Teach</h5>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        {% for skill in profile_user.profile.skills_to_teach.all %}
+                            <span class="badge bg-primary rounded-pill m-1 fs-6">{{ skill.name }}</span>
+                        {% empty %}
+                            <p class="text-muted small">No skills listed.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <h3 class="fw-light">Feedback & Ratings</h3>
+            <hr>
+            
+            <div class="card shadow-sm border-0 rounded-3 mb-4">
+                <div class="card-body text-center p-4">
+                    <h4 class="fw-light">Average Rating</h4>
+                    {% if average_rating %}
+                        <h2 class="display-4 fw-bold">{{ average_rating|floatformat:1 }} / 5.0</h2>
+                        <i data-feather="star" class="feather text-warning" fill="currentColor"></i>
+                    {% else %}
+                        <p class="text-muted fs-4">No Ratings Yet</p>
+                        <i data-feather="star" class="feather text-muted"></i>
+                    {% endif %}
+                </div>
+            </div>
+
+            <h4 class="fw-light">All Feedback:</h4>
+            {% for fb in feedbacks %}
+                <div class="card shadow-sm border-0 rounded-3 mb-3">
+                    <div class="card-body p-4">
+                        <p class="card-text fs-5">"{{ fb.comment }}"</p>
+                        <footer class="blockquote-footer d-flex justify-content-between">
+                            <span>
+                                <i data-feather="user" class="feather"></i> {{ fb.session.learner.username }}
+                                <span class="ms-2"><i data-feather="calendar" class="feather"></i> {{ fb.created_at|date:"d M Y" }}</span>
+                            </span>
+                            <span class="fw-bold fs-5 text-warning">
+                                {{ fb.rating }}/5 <i data-feather="star" class="feather" fill="currentColor"></i>
+                            </span>
+                        </footer>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-4 text-center">
+                        <p class="text-muted mb-0">This user has not received any feedback yet.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
