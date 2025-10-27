@@ -1,6 +1,6 @@
 # SkillSwap: Peer-to-Peer Learning Platform
 
-![SkillSwap Homepage](https://i.imgur.com/your-hero-image-link.png) SkillSwap is a web-based, peer-to-peer learning platform built with Django. It redefines traditional e-learning by empowering every user to serve as both a learner and a teacher, fostering a collaborative and community-driven learning environment.
+! **SkillSwap Homepage** SkillSwap is a web-based, peer-to-peer learning platform built with Django. It redefines traditional e-learning by empowering every user to serve as both a learner and a teacher, fostering a collaborative and community-driven learning environment.
 
 This system intelligently matches users based on the skills they possess and the skills they wish to acquire, creating a dynamic ecosystem for continuous learning and personal development.
 
