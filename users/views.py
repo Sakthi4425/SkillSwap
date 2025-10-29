@@ -8,6 +8,7 @@ from .models import Profile
 from django.contrib.auth.models import User
 from scheduling.models import Feedback
 from django.db.models import Avg
+from skills.models import Skill
 
 
 def home(request):
@@ -32,14 +33,41 @@ def profile(request):
     Profile.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
+        # Pass request.POST and request.FILES to the form
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
         
         if p_form.is_valid():
-            p_form.save()
+            profile = p_form.save() # Save bio and image first
+
+            # --- 1. Process "Skills to Teach" ---
+            teach_skills_str = p_form.cleaned_data.get('teach_skills_input', '')
+            profile.skills_to_teach.clear() # Clear old skills
+            teach_skill_names = [name.strip().title() for name in teach_skills_str.split(',') if name.strip()]
+            
+            for name in teach_skill_names:
+                skill, created = Skill.objects.get_or_create(name=name)
+                profile.skills_to_teach.add(skill)
+
+            # --- 2. Process "Skills to Learn" ---
+            learn_skills_str = p_form.cleaned_data.get('learn_skills_input', '')
+            profile.skills_to_learn.clear() # Clear old skills
+            learn_skill_names = [name.strip().title() for name in learn_skills_str.split(',') if name.strip()]
+            
+            for name in learn_skill_names:
+                skill, created = Skill.objects.get_or_create(name=name)
+                profile.skills_to_learn.add(skill)
+
             messages.success(request, 'Your profile has been updated!')
             return redirect('profile')
-    else:
+
+    else: 
         p_form = ProfileUpdateForm(instance=request.user.profile)
+
+        teach_skills = ', '.join([skill.name for skill in request.user.profile.skills_to_teach.all()])
+        learn_skills = ', '.join([skill.name for skill in request.user.profile.skills_to_learn.all()])
+        
+        p_form.fields['teach_skills_input'].initial = teach_skills
+        p_form.fields['learn_skills_input'].initial = learn_skills
 
     context = {
         'p_form': p_form
@@ -54,7 +82,7 @@ def public_profile(request, user_id):
     average_rating = feedbacks.aggregate(Avg('rating'))['rating__avg']
 
     context = {
-        'profile_user': profile_user,  # The user whose profile is being viewed
+        'profile_user': profile_user,  
         'feedbacks': feedbacks,
         'average_rating': average_rating
     }

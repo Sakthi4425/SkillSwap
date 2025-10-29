@@ -1,8 +1,17 @@
 # SkillSwap: Peer-to-Peer Learning Platform
 
-![SkillSwap Homepage](https://i.imgur.com/your-hero-image-link.png) SkillSwap is a web-based, peer-to-peer learning platform built with Django. It redefines traditional e-learning by empowering every user to serve as both a learner and a teacher, fostering a collaborative and community-driven learning environment.
+SkillSwap is a modern, peer-to-peer learning platform with a **React frontend** and **Django REST API backend**. It redefines traditional e-learning by empowering every user to serve as both a learner and a teacher, fostering a collaborative and community-driven learning environment.
 
 This system intelligently matches users based on the skills they possess and the skills they wish to acquire, creating a dynamic ecosystem for continuous learning and personal development.
+
+## 🎨 New React UI
+
+The application now features a modern, responsive React frontend with:
+- **Beautiful UI** built with Tailwind CSS
+- **Current user display** in the navbar
+- **Session status indicators**: Pending → Ongoing → Completed
+- **Real-time updates** and smooth animations
+- **Toast notifications** for user feedback
 
 ## ✨ Core Features
 
@@ -26,16 +35,17 @@ This system intelligently matches users based on the skills they possess and the
 * **Backend:**
     * [Python](https://www.python.org/)
     * [Django](https://www.djangoproject.com/) (Web Framework)
+    * [Django REST Framework](https://www.django-rest-framework.org/) (API)
     * [SQLite](https://www.sqlite.org/index.html) (Development Database)
 * **Frontend:**
-    * HTML5 / CSS3
-    * [Bootstrap 5](https://getbootstrap.com/)
-    * [Feather Icons](https://feathericons.com/)
+    * [React](https://reactjs.org/) (UI Library)
+    * [Tailwind CSS](https://tailwindcss.com/) (Styling)
+    * [React Router](https://reactrouter.com/) (Routing)
+    * [Axios](https://axios-http.com/) (HTTP Client)
 * **Python Libraries:**
     * `Pillow` (for image upload processing)
-    * `django-widget-tweaks` (for styling Django forms)
-    * `djangorestframework`
-    * `django-cors-headers`
+    * `djangorestframework` (REST API)
+    * `django-cors-headers` (CORS support)
 
 ## 🚀 Getting Started
 
@@ -97,7 +107,33 @@ Follow these instructions to get a copy of the project up and running on your lo
     python manage.py runserver
     ```
 
-8.  **You're all set!** Open your browser and go to `http://127.0.0.1:8000/`.
+### React Frontend Setup
+
+1.  **Navigate to frontend directory:**
+    ```sh
+    cd frontend
+    ```
+
+2.  **Install dependencies:**
+    ```sh
+    npm install
+    ```
+
+3.  **Start the React server:**
+    ```sh
+    npm start
+    ```
+
+4.  **You're all set!** Open your browser and go to `http://localhost:3000/`.
+
+### Quick Start (Both Servers)
+
+On Windows, simply run:
+```bat
+start_server.bat
+```
+
+This will start both Django and React servers automatically.
 
 ## 🧑‍🏫 How to Use
 

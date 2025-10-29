@@ -1,0 +1,74 @@
+/* static/css/style.css */
+
+/* Basic Light Mode Defaults (if not already handled by Bootstrap) */
+body {
+    background-color: #f8f9fa; /* Light background */
+    color: #212529; /* Dark text */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.card {
+    background-color: #ffffff;
+    color: #212529;
+    border: 1px solid rgba(0,0,0,.125);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* --- Dark Mode Styles --- */
+body.dark-mode {
+    background-color: #212529; /* Dark background */
+    color: #f8f9fa; /* Light text */
+}
+
+body.dark-mode .navbar {
+    background-color: #343a40; /* Darker navbar */
+    border-bottom-color: #495057;
+}
+
+body.dark-mode .navbar .navbar-brand,
+body.dark-mode .navbar .nav-link {
+    color: #f8f9fa; /* Light text for navbar items */
+}
+
+body.dark-mode .navbar .nav-link:hover {
+    color: #cccccc;
+}
+
+body.dark-mode .card {
+    background-color: #343a40; /* Dark card background */
+    color: #f8f9fa; /* Light text for cards */
+    border-color: #495057; /* Darker border */
+}
+
+body.dark-mode .text-muted {
+    color: #ced4da !important; /* Lighter muted text */
+}
+
+body.dark-mode .alert-info {
+    background-color: #0c5460;
+    border-color: #0a4751;
+    color: #ffffff;
+}
+
+body.dark-mode a:not(.btn) {
+    color: #8ab4f8; /* Lighter link color */
+}
+body.dark-mode a:not(.btn):hover {
+    color: #a6c8ff;
+}
+
+/* Adjust for specific elements if needed */
+body.dark-mode .form-control {
+    background-color: #495057;
+    color: #f8f9fa;
+    border-color: #6c757d;
+}
+body.dark-mode .form-control::placeholder {
+    color: #ced4da;
+}

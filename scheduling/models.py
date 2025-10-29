@@ -16,6 +16,7 @@ class Session(models.Model):
     scheduled_time = models.DateTimeField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     meeting_link = models.URLField(blank=True, null=True) # For teaching tools
+    notes = models.TextField(blank=True, help_text="Shared notes for this session") # For progress tracking
 
     def __str__(self):
         return f'Session for {self.skill} between {self.teacher} and {self.learner}'
