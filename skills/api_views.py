@@ -6,6 +6,8 @@ from .serializers import SkillSerializer, CategorySerializer
 from users.models import Profile
 from scheduling.models import Session
 from django.db.models import Q
+from users.serializers import ProfileSerializer
+from .models import Skill, Category
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all()
@@ -21,23 +23,36 @@ class SkillViewSet(viewsets.ModelViewSet):
     def matches(self, request):
         user_profile = request.user.profile
         
+        # Get query params from the URL
+        search_query = request.query_params.get('search', None)
+        category_id = request.query_params.get('category', None)
+
         # Get skills the user wants to learn
         skills_to_learn = user_profile.skills_to_learn.all()
         
-        # Find teacher IDs with active sessions (pending or confirmed)
-        active_teacher_ids = Session.objects.filter(
-            learner=request.user,
-            status__in=['pending', 'confirmed']
-        ).values_list('teacher_id', flat=True)
-        
         # Find profiles of users who can teach those skills
+        # We removed the filter for active sessions here.
         matches = Profile.objects.filter(
             skills_to_teach__in=skills_to_learn
         ).exclude(
             user=request.user
-        ).exclude(
-            user_id__in=active_teacher_ids
-        ).distinct()
+        )
+        
+        # Apply search filter if it exists
+        if search_query:
+            matches = matches.filter(
+                Q(user__username__icontains=search_query) |
+                Q(skills_to_teach__name__icontains=search_query)
+            )
+            
+        # Apply category filter if it exists
+        if category_id:
+            matches = matches.filter(
+                skills_to_teach__category_id=category_id
+            )
+        
+        # Add distinct at the end
+        matches = matches.distinct()
         
         # Serialize the matches
         from users.serializers import ProfileSerializer

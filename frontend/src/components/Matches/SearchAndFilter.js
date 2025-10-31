@@ -45,7 +45,7 @@ const SearchAndFilter = ({ onSearch, onCategoryChange, selectedCategory }) => {
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder="Search for skills..."
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
@@ -57,7 +57,7 @@ const SearchAndFilter = ({ onSearch, onCategoryChange, selectedCategory }) => {
         <select
           value={selectedCategory || 'all'}
           onChange={handleCategoryChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="all">All Categories</option>
           {categories.map((category) => (

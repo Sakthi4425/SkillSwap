@@ -18,6 +18,8 @@ const Profile = () => {
   });
 
   useEffect(() => {
+    // We check user.profile here because the `user` object from AuthContext
+    // now contains the nested profile data, including 'received_feedback'
     if (user && user.profile) {
       setProfile(user.profile);
       setFormData({
@@ -64,8 +66,9 @@ const Profile = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       
+      // Update the user in AuthContext with the new profile data
       updateUser({ ...user, profile: response.data });
-      setProfile(response.data);
+      setProfile(response.data); // Also update local state
       setEditing(false);
       toast.success('Profile updated successfully!');
     } catch (error) {
@@ -79,6 +82,7 @@ const Profile = () => {
     </div>;
   }
 
+  // This is the "View Profile" mode
   if (!editing) {
     return (
       <div className="max-w-4xl mx-auto">
@@ -136,12 +140,44 @@ const Profile = () => {
                 )}
               </div>
             </div>
+
+            {/* --- THIS IS THE NEW FEEDBACK SECTION --- */}
+            {profile.received_feedback && profile.received_feedback.length > 0 && (
+              <div className="pt-4 mt-4 border-t border-gray-200">
+                <h2 className="text-xl font-semibold text-gray-800 mb-3">
+                  Feedback You've Received
+                </h2>
+                <div className="space-y-3">
+                  {profile.received_feedback.map((feedback) => (
+                    <div key={feedback.id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="flex items-center mb-2">
+                        <span className="text-2xl" role="img" aria-label="star">
+                          {'⭐'.repeat(feedback.rating)}
+                        </span>
+                        <span className="ml-2 text-gray-600 font-semibold">
+                          ({feedback.rating}/5)
+                        </span>
+                      </div>
+                      <p className="text-gray-700 italic mb-2">
+                        "{feedback.comment}"
+                      </p>
+                      <p className="text-sm text-gray-500 text-right">
+                        - {feedback.learner_username} for {feedback.skill_name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* --- END OF NEW FEEDBACK SECTION --- */}
+
           </div>
         </div>
       </div>
     );
   }
 
+  // This is the "Edit Profile" mode (no changes here)
   return (
     <div className="max-w-4xl mx-auto">
       <div className="bg-white rounded-lg shadow-md p-8">
@@ -231,4 +267,3 @@ const Profile = () => {
 };
 
 export default Profile;
-

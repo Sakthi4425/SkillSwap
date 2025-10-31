@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.db.models import Q
-from .models import Profile, Endorsement
-from .serializers import UserSerializer, ProfileSerializer, EndorsementSerializer
+from .models import Profile
+from .serializers import UserSerializer, ProfileSerializer
 from skills.models import Skill
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -58,31 +58,3 @@ class UserViewSet(viewsets.ModelViewSet):
         profile.save()
         serializer = ProfileSerializer(profile, context={'request': request})
         return Response(serializer.data)
-
-class EndorsementViewSet(viewsets.ModelViewSet):
-    serializer_class = EndorsementSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def get_queryset(self):
-        # Users can see endorsements they gave or received
-        user = self.request.user
-        return Endorsement.objects.filter(
-            Q(endorser=user) | Q(endorsee=user)
-        )
-    
-    def perform_create(self, serializer):
-        serializer.save(endorser=self.request.user)
-    
-    @action(detail=False, methods=['get'])
-    def for_user(self, request):
-        """Get endorsements for a specific user"""
-        user_id = request.query_params.get('user_id')
-        if not user_id:
-            return Response({'detail': 'user_id parameter required'}, 
-                          status=status.HTTP_400_BAD_REQUEST)
-        
-        endorsements = Endorsement.objects.filter(endorsee_id=user_id)
-        serializer = self.get_serializer(endorsements, many=True)
-        
-        return Response(serializer.data)
-

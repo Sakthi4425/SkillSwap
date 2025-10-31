@@ -1,7 +1,7 @@
 # users/models.py
 from django.db import models
 from django.contrib.auth.models import User
-from PIL import Image # Still keep for resizing uploads
+from PIL import Image 
 import os
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -34,19 +34,6 @@ class Profile(models.Model):
                  print(f"Warning: Image file not found for user {self.user.username} at {self.image.path} during save.")
             except Exception as e:
                 print(f"Error processing image for user {self.user.username}: {e}")
-
-class Endorsement(models.Model):
-    """Users can endorse others for specific skills"""
-    endorser = models.ForeignKey(User, related_name='given_endorsements', on_delete=models.CASCADE)
-    endorsee = models.ForeignKey(User, related_name='received_endorsements', on_delete=models.CASCADE)
-    skill = models.ForeignKey('skills.Skill', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        unique_together = ('endorser', 'endorsee', 'skill')  # Prevent duplicate endorsements
-    
-    def __str__(self):
-        return f'{self.endorser.username} endorses {self.endorsee.username} for {self.skill.name}'
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

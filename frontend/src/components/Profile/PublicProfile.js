@@ -2,38 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
-import EndorsementButton from './EndorsementButton';
 
 const PublicProfile = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [endorsements, setEndorsements] = useState([]);
 
   useEffect(() => {
     fetchProfile();
-    fetchEndorsements();
   }, [userId]);
 
   const fetchProfile = async () => {
     try {
       const response = await api.get(`/users/${userId}/`);
-      setProfile(response.data.profile);
+      setProfile(response.data.profile); 
     } catch (error) {
       toast.error('Failed to load profile');
       navigate('/matches');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchEndorsements = async () => {
-    try {
-      const response = await api.get(`/endorsements/for_user/?user_id=${userId}`);
-      setEndorsements(response.data);
-    } catch (error) {
-      // Endorsements might not exist, that's ok
     }
   };
 
@@ -66,6 +54,23 @@ const PublicProfile = () => {
             className="w-32 h-32 rounded-full object-cover border-4 border-blue-600 mb-4"
           />
           <h1 className="text-3xl font-bold text-gray-800">{profile.username}</h1>
+          
+          {/* --- ADDED THIS BUSY BADGE --- */}
+          {profile.is_busy && (
+            <span className="mt-2 inline-block bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full">
+              {profile.active_session_end_time
+                ? `Busy until ${new Date(profile.active_session_end_time).toLocaleString('en-GB', { 
+                    day: '2-digit', 
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    hour12: true
+                  })}`
+                : 'Currently in a session'
+              }
+            </span>
+          )}
         </div>
 
         {profile.bio && (
@@ -79,16 +84,9 @@ const PublicProfile = () => {
           <h2 className="text-xl font-semibold text-gray-800 mb-3">Skills to Teach</h2>
           <div className="flex flex-wrap gap-2 items-center">
             {profile.skills_to_teach?.map((skill) => (
-              <div key={skill.id} className="flex items-center gap-2">
-                <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
-                  {skill.name}
-                </span>
-                <EndorsementButton
-                  userId={userId}
-                  skillId={skill.id}
-                  skillName={skill.name}
-                />
-              </div>
+              <span key={skill.id} className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
+                {skill.name}
+              </span>
             ))}
           </div>
         </div>
@@ -109,17 +107,27 @@ const PublicProfile = () => {
           </div>
         )}
 
-        {endorsements.length > 0 && (
+        {profile.received_feedback && profile.received_feedback.length > 0 && (
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-3">
-              Endorsements ({endorsements.length})
+              Feedback ({profile.received_feedback.length})
             </h2>
-            <div className="space-y-2">
-              {endorsements.map((endorsement) => (
-                <div key={endorsement.id} className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-600">
-                    <span className="font-semibold">{endorsement.endorser_username}</span> endorsed
-                    for <span className="font-semibold text-blue-600">{endorsement.skill_name}</span>
+            <div className="space-y-3">
+              {profile.received_feedback.map((feedback) => (
+                <div key={feedback.id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <div className="flex items-center mb-2">
+                    <span className="text-2xl" role="img" aria-label="star">
+                      {'⭐'.repeat(feedback.rating)}
+                    </span>
+                    <span className="ml-2 text-gray-600 font-semibold">
+                      ({feedback.rating}/5)
+                    </span>
+                  </div>
+                  <p className="text-gray-700 italic mb-2">
+                    "{feedback.comment}"
+                  </p>
+                  <p className="text-sm text-gray-500 text-right">
+                    - {feedback.learner_username} on {feedback.skill_name}
                   </p>
                 </div>
               ))}
@@ -132,4 +140,3 @@ const PublicProfile = () => {
 };
 
 export default PublicProfile;
-
